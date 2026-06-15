@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="az" data-theme="dark" data-lang="az">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CodeForge – Fikirləri Rəqəmsal Həllərə Çeviririk</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+:root {
+  --bg: #0A2540;
+  --bg2: #0d2d4a;
+  --bg3: #0f3358;
+  --surface: rgba(255,255,255,0.04);
+  --surface2: rgba(255,255,255,0.08);
+  --border: rgba(0,180,255,0.18);
+  --text: #e8f4ff;
+  --text2: #8bb8d4;
+  --accent: #00b4ff;
+  --accent2: #0066cc;
+  --accent3: #00ffcc;
+  --glow: 0 0 20px rgba(0,180,255,0.4);
+  --glow2: 0 0 40px rgba(0,180,255,0.2);
+  --card-bg: rgba(10,37,64,0.7);
+  --nav-bg: rgba(8,28,50,0.95);
+}
+[data-theme="light"] {
+  --bg: #f0f6ff;
+  --bg2: #e8f0fb;
+  --bg3: #dceaf8;
+  --surface: rgba(0,100,200,0.06);
+  --surface2: rgba(0,100,200,0.1);
+  --border: rgba(0,100,200,0.2);
+  --text: #0a2540;
+  --text2: #2a5a8a;
+  --accent: #0055cc;
+  --accent2: #003d99;
+  --accent3: #007755;
+  --glow: 0 4px 20px rgba(0,100,200,0.2);
+  --glow2: 0 8px 40px rgba(0,100,200,0.1);
+  --card-bg: rgba(240,246,255,0.85);
+  --nav-bg: rgba(235,244,255,0.95);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Rajdhani',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  transition:background .4s,color .4s;
+}
+
+/* ───── GRID BACKGROUND ───── */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,180,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,180,255,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  pointer-events:none;z-index:0;
+  transition:opacity .4s;
+}
+[data-theme="light"] body::before{opacity:.5;}
+
+/* ───── NAV ───── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  padding:0 40px;height:70px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .4s;
+}
+.nav-brand{
+  display:flex;align-items:center;gap:12px;
+  text-decoration:none;
+}
+.nav-logo-icon{
+  width:40px;height:40px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Orbitron',monospace;
+  font-size:16px;font-weight:900;
+  color:#fff;
+  box-shadow:var(--glow);
+  position:relative;overflow:hidden;
+}
+.nav-logo-icon::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.2) 50%,transparent 60%);
+  animation:shimmer 3s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-100%);}100%{transform:translateX(200%);}}
+.nav-title{
+  font-family:'Orbitron',monospace;
+  font-size:20px;font-weight:700;
+  color:var(--accent);
+  letter-spacing:2px;
+}
+.nav-links{display:flex;align-items:center;gap:8px;}
+.nav-links a{
+  padding:8px 16px;border-radius:6px;
+  text-decoration:none;color:var(--text2);
+  font-size:14px;font-weight:600;letter-spacing:.5px;
+  transition:all .3s;
+  font-family:'Rajdhani',sans-serif;
+}
+.nav-links a:hover{color:var(--accent);background:var(--surface2);}
+.nav-controls{display:flex;align-items:center;gap:8px;}
+.lang-btn{
+  padding:6px 12px;border-radius:6px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);cursor:pointer;
+  font-size:12px;font-weight:600;
+  font-family:'Rajdhani',sans-serif;
+  transition:all .3s;letter-spacing:.5px;
+}
+.lang-btn.active,.lang-btn:hover{
+  background:var(--accent);color:#fff;
+  border-color:var(--accent);
+  box-shadow:var(--glow);
+}
+.theme-btn{
+  width:40px;height:40px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text);cursor:pointer;
+  font-size:18px;transition:all .3s;
+  display:flex;align-items:center;justify-content:center;
+}
+.theme-btn:hover{background:var(--surface2);box-shadow:var(--glow);}
+
+/* ───── HERO ───── */
+#hero{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  padding:120px 40px 80px;
+  z-index:1;
+}
+.hero-bg-orbs{position:absolute;inset:0;pointer-events:none;}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(80px);
+  animation:orbFloat 8s ease-in-out infinite alternate;
+}
+.orb1{width:500px;height:500px;background:rgba(0,180,255,0.08);top:-100px;right:-100px;}
+.orb2{width:400px;height:400px;background:rgba(0,102,204,0.1);bottom:-50px;left:-80px;animation-delay:-3s;}
+.orb3{width:300px;height:300px;background:rgba(0,255,204,0.05);top:50%;left:50%;animation-delay:-5s;}
+@keyframes orbFloat{from{transform:translate(0,0) scale(1);}to{transform:translate(30px,20px) scale(1.1);}}
+
+.hero-content{text-align:center;max-width:900px;position:relative;z-index:2;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 20px;border-radius:100px;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:13px;color:var(--accent);font-weight:600;
+  letter-spacing:1px;margin-bottom:32px;
+  animation:fadeInDown .8s ease both;
+}
+.hero-badge .dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent3);
+  box-shadow:0 0 8px var(--accent3);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+.hero-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(36px,6vw,80px);
+  font-weight:900;line-height:1.1;
+  margin-bottom:8px;
+  animation:fadeInUp .8s .2s ease both;
+}
+.hero-title span{
+  display:block;
+  background:linear-gradient(135deg,var(--accent),var(--accent3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-subtitle{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(18px,3vw,32px);
+  font-weight:400;color:var(--text2);
+  margin-bottom:24px;
+  animation:fadeInUp .8s .3s ease both;
+}
+.hero-slogan{
+  font-size:18px;color:var(--text2);
+  font-weight:500;letter-spacing:.5px;
+  margin-bottom:48px;
+  animation:fadeInUp .8s .4s ease both;
+  font-style:italic;
+}
+.hero-slogan strong{color:var(--accent);}
+.hero-btns{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  animation:fadeInUp .8s .5s ease both;
+}
+.btn-primary{
+  padding:16px 36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;text-decoration:none;
+  font-weight:700;font-size:15px;letter-spacing:1px;
+  font-family:'Rajdhani',sans-serif;
+  border:none;cursor:pointer;
+  box-shadow:var(--glow);
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.btn-primary::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(45deg,transparent 40%,rgba(255,255,255,0.15) 50%,transparent 60%);
+  transform:translateX(-100%);transition:.4s;
+}
+.btn-primary:hover::after{transform:translateX(200%);}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,180,255,0.5);}
+.btn-primary:disabled{opacity:0.7;cursor:not-allowed;transform:none;}
+.btn-secondary{
+  padding:16px 36px;border-radius:10px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text);text-decoration:none;
+  font-weight:700;font-size:15px;letter-spacing:1px;
+  font-family:'Rajdhani',sans-serif;
+  cursor:pointer;transition:all .3s;
+}
+.btn-secondary:hover{background:var(--surface2);border-color:var(--accent);color:var(--accent);transform:translateY(-2px);}
+
+/* ───── STATS ───── */
+.hero-stats{
+  display:flex;justify-content:center;gap:60px;
+  margin-top:64px;flex-wrap:wrap;
+  animation:fadeIn .8s .7s ease both;
+  padding-top:48px;
+  border-top:1px solid var(--border);
+}
+.stat{text-align:center;}
+.stat-num{
+  font-family:'Orbitron',monospace;
+  font-size:36px;font-weight:900;
+  color:var(--accent);
+  line-height:1;
+}
+.stat-label{font-size:13px;color:var(--text2);font-weight:600;letter-spacing:1px;margin-top:6px;}
+
+/* ───── SECTIONS ───── */
+section{position:relative;z-index:1;padding:100px 40px;}
+.section-header{text-align:center;margin-bottom:64px;}
+.section-tag{
+  display:inline-block;
+  padding:6px 16px;border-radius:100px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--accent);font-size:12px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;
+}
+.section-title{
+  font-family:'Orbitron',monospace;
+  font-size:clamp(24px,4vw,42px);
+  font-weight:700;line-height:1.2;
+  margin-bottom:16px;
+}
+.section-desc{
+  font-size:17px;color:var(--text2);
+  max-width:600px;margin:0 auto;
+  line-height:1.7;font-weight:400;
+}
+.container{max-width:1200px;margin:0 auto;}
+
+/* ───── ABOUT ───── */
+#about{background:var(--bg2);}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+}
+.about-text .lead{
+  font-size:20px;color:var(--accent);font-weight:600;
+  margin-bottom:20px;line-height:1.5;
+}
+.about-text p{
+  font-size:16px;color:var(--text2);line-height:1.8;
+  margin-bottom:20px;font-weight:400;
+}
+.about-values{display:flex;flex-direction:column;gap:16px;margin-top:32px;}
+.value-item{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .3s;
+}
+.value-item:hover{background:var(--surface2);border-color:var(--accent);transform:translateX(6px);}
+.value-icon{
+  width:40px;height:40px;border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+  box-shadow:var(--glow);
+}
+.value-text h4{font-size:15px;font-weight:700;margin-bottom:2px;color:var(--text);}
+.value-text p{font-size:13px;color:var(--text2);margin:0;}
+
+.about-visual{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.code-window{
+  width:100%;background:rgba(5,15,30,0.9);
+  border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.4),var(--glow2);
+}
+[data-theme="light"] .code-window{background:rgba(20,40,80,0.9);}
+.code-header{
+  padding:14px 20px;
+  background:rgba(255,255,255,0.05);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.dot-r{width:12px;height:12px;border-radius:50%;background:#ff5f57;}
+.dot-y{width:12px;height:12px;border-radius:50%;background:#ffbd2e;}
+.dot-g{width:12px;height:12px;border-radius:50%;background:#28ca41;}
+.code-filename{margin-left:12px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#8bb8d4;}
+.code-body{padding:24px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;}
+.ck{color:#c792ea;} .cs{color:#82aaff;} .cv{color:#f78c6c;} .cm{color:#546e7a;font-style:italic;}
+.cn{color:#00ffcc;} .cp{color:#ffcb6b;}
+
+/* ───── SERVICES ───── */
+#services{background:var(--bg);}
+.services-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;
+}
+.service-card{
+  padding:36px 28px;border-radius:16px;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  backdrop-filter:blur(10px);
+  transition:all .4s;
+  position:relative;overflow:hidden;
+  cursor:default;
+}
+.service-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 60%,rgba(0,180,255,0.06));
+  opacity:0;transition:.4s;
+}
+.service-card:hover{
+  transform:translateY(-8px);
+  border-color:var(--accent);
+  box-shadow:0 20px 60px rgba(0,0,0,0.3),var(--glow2);
+}
+.service-card:hover::before{opacity:1;}
+.service-icon{
+  width:60px;height:60px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin-bottom:24px;
+  position:relative;
+}
+.service-icon-1{background:linear-gradient(135deg,#0066ff22,#0066ff44);}
+.service-icon-2{background:linear-gradient(135deg,#00ccff22,#00ccff44);}
+.service-icon-3{background:linear-gradient(135deg,#cc44ff22,#cc44ff44);}
+.service-icon-4{background:linear-gradient(135deg,#00ff9922,#00ff9944);}
+.service-card h3{
+  font-family:'Orbitron',monospace;
+  font-size:16px;font-weight:700;
+  margin-bottom:12px;letter-spacing:.5px;
+}
+.service-card p{font-size:14px;color:var(--text2);line-height:1.7;font-weight:400;}
+.service-tag{
+  display:inline-block;margin-top:20px;
+  padding:5px 12px;border-radius:100px;
+  background:var(--surface2);border:1px solid var(--border);
+  font-size:11px;color:var(--accent);font-weight:600;letter-spacing:1px;
+}
+
+/* ───── PORTFOLIO ───── */
+#portfolio{background:var(--bg2);}
+.portfolio-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:28px;
+}
+.portfolio-card{
+  border-radius:16px;overflow:hidden;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  transition:all .4s;
+  cursor:default;
+}
+.portfolio-card:hover{
+  transform:translateY(-6px);
+  border-color:var(--accent);
+  box-shadow:0 20px 50px rgba(0,0,0,0.3),var(--glow2);
+}
+.portfolio-img{
+  height:180px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  font-size:50px;
+}
+.pi-1{background:linear-gradient(135deg,#0d2d6b,#1a5276);}
+.pi-2{background:linear-gradient(135deg,#1a0a3d,#2e0a6b);}
+.pi-3{background:linear-gradient(135deg,#0a2d1a,#0d6b3d);}
+.pi-4{background:linear-gradient(135deg,#3d1a0a,#6b3d0a);}
+.pi-5{background:linear-gradient(135deg,#0a1a3d,#0a3d5c);}
+.pi-6{background:linear-gradient(135deg,#2d0a3d,#5c0a3d);}
+.portfolio-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,0.6));
+}
+.portfolio-info{padding:24px;}
+.portfolio-info h3{
+  font-family:'Orbitron',monospace;
+  font-size:15px;font-weight:700;
+  margin-bottom:8px;letter-spacing:.3px;
+}
+.portfolio-info p{font-size:13px;color:var(--text2);line-height:1.6;}
+.portfolio-tech{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.tech-tag{
+  padding:4px 10px;border-radius:100px;
+  background:var(--surface2);border:1px solid var(--border);
+  font-size:11px;color:var(--accent);font-weight:600;
+}
+
+/* ───── WHY US ───── */
+#why{background:var(--bg3);}
+.why-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:24px;
+}
+.why-card{
+  text-align:center;padding:40px 24px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .3s;
+}
+.why-card:hover{
+  background:var(--surface2);border-color:var(--accent);
+  transform:translateY(-4px);box-shadow:var(--glow2);
+}
+.why-icon{
+  font-size:40px;margin-bottom:20px;display:block;
+  filter:drop-shadow(0 0 10px rgba(0,180,255,0.4));
+}
+.why-card h3{
+  font-family:'Orbitron',monospace;
+  font-size:14px;font-weight:700;
+  color:var(--accent);letter-spacing:.5px;
+  margin-bottom:12px;
+}
+.why-card p{font-size:14px;color:var(--text2);line-height:1.6;font-weight:400;}
+
+/* ───── CONTACT ───── */
+#contact{background:var(--bg);}
+.contact-wrapper{
+  max-width:700px;margin:0 auto;
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:24px;padding:56px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.3),var(--glow2);
+}
+.contact-info{
+  display:flex;flex-direction:column;gap:20px;
+  margin-bottom:40px;
+}
+.contact-item{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 20px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all .3s;
+}
+.contact-item:hover{background:var(--surface2);border-color:var(--accent);transform:translateX(6px);}
+.contact-item-icon{
+  width:46px;height:46px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  box-shadow:var(--glow);
+}
+.contact-item-text label{font-size:12px;color:var(--text2);font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.contact-item-text span{display:block;font-size:16px;font-weight:600;color:var(--text);}
+
+.contact-form{display:flex;flex-direction:column;gap:16px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-group{display:flex;flex-direction:column;gap:8px;}
+.form-group label{font-size:13px;color:var(--text2);font-weight:600;letter-spacing:.5px;}
+.form-group input,.form-group textarea,.form-group select{
+  padding:14px 16px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text);font-family:'Rajdhani',sans-serif;
+  font-size:15px;font-weight:500;
+  transition:all .3s;outline:none;
+  resize:none;
+}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text2);opacity:.5;}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(0,180,255,0.15);
+  background:var(--surface2);
+}
+.form-group textarea{min-height:120px;}
+.form-group select option{background:var(--bg);color:var(--text);}
+
+/* ───── FOOTER ───── */
+footer{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding:48px 40px;
+  position:relative;z-index:1;
+}
+.footer-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:24px;
+}
+.footer-brand{display:flex;align-items:center;gap:12px;}
+.footer-brand-name{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:var(--accent);}
+.footer-slogan{font-size:13px;color:var(--text2);margin-top:4px;}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+.footer-links a{
+  font-size:14px;color:var(--text2);text-decoration:none;
+  font-weight:600;letter-spacing:.5px;transition:color .3s;
+}
+.footer-links a:hover{color:var(--accent);}
+.footer-copy{
+  width:100%;text-align:center;
+  font-size:13px;color:var(--text2);
+  padding-top:32px;border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;
+}
+.footer-copy span{color:var(--accent);}
+
+/* ───── MOBILE MENU ───── */
+.hamburger{
+  display:none;width:40px;height:40px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text);cursor:pointer;font-size:18px;
+  align-items:center;justify-content:center;
+}
+.mobile-menu{
+  display:none;position:fixed;top:70px;left:0;right:0;
+  background:var(--nav-bg);border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);z-index:999;padding:20px;
+  flex-direction:column;gap:8px;
+}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{
+  padding:12px 16px;border-radius:8px;
+  text-decoration:none;color:var(--text);
+  font-weight:600;font-size:15px;transition:all .3s;
+}
+.mobile-menu a:hover{background:var(--surface2);color:var(--accent);}
+
+/* ───── SCROLL ANIMATIONS ───── */
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
+
+/* ───── RESPONSIVE ───── */
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  section{padding:70px 20px;}
+  .about-grid{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+  .contact-wrapper{padding:32px 24px;}
+  .hero-stats{gap:30px;}
+  .stat-num{font-size:28px;}
+  footer{padding:40px 20px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+  .footer-links{justify-content:center;}
+}
+
+/* ───── TOAST ───── */
+.toast{
+  position:fixed;bottom:30px;right:30px;z-index:9999;
+  padding:14px 24px;border-radius:10px;
+  color:#fff;font-weight:600;font-size:15px;
+  box-shadow:0 8px 30px rgba(0,0,0,0.3);
+  transform:translateY(100px);opacity:0;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;
+  max-width:320px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.toast-success{background:linear-gradient(135deg,#00b44f,#007733);}
+.toast.toast-error{background:linear-gradient(135deg,#cc2200,#991100);}
+.toast.toast-info{background:linear-gradient(135deg,var(--accent),var(--accent2));}
+
+/* ───── BACK TO TOP ───── */
+#backTop{
+  position:fixed;bottom:30px;left:30px;z-index:999;
+  width:44px;height:44px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--accent);cursor:pointer;font-size:20px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:all .3s;pointer-events:none;
+  box-shadow:var(--glow);
+}
+#backTop.visible{opacity:1;pointer-events:all;}
+#backTop:hover{background:var(--accent);color:#fff;}
+
+/* ───── SPINNER ───── */
+.spinner{
+  display:inline-block;width:16px;height:16px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;
+  vertical-align:middle;margin-right:8px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#hero">
+    <div class="nav-logo-icon">CF</div>
+    <span class="nav-title">CodeForge</span>
+  </a>
+  <div class="nav-links">
+    <a href="#about" data-i18n="nav_about"></a>
+    <a href="#services" data-i18n="nav_services"></a>
+    <a href="#portfolio" data-i18n="nav_portfolio"></a>
+    <a href="#why" data-i18n="nav_why"></a>
+    <a href="#contact" data-i18n="nav_contact"></a>
+  </div>
+  <div class="nav-controls">
+    <button class="lang-btn active" onclick="setLang('az')">AZ</button>
+    <button class="lang-btn" onclick="setLang('tr')">TR</button>
+    <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeIcon">🌙</button>
+    <button class="hamburger" onclick="toggleMobile()">☰</button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()" data-i18n="nav_about"></a>
+  <a href="#services" onclick="closeMobile()" data-i18n="nav_services"></a>
+  <a href="#portfolio" onclick="closeMobile()" data-i18n="nav_portfolio"></a>
+  <a href="#why" onclick="closeMobile()" data-i18n="nav_why"></a>
+  <a href="#contact" onclick="closeMobile()" data-i18n="nav_contact"></a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      <span data-i18n="hero_badge"></span>
+    </div>
+    <h1 class="hero-title">
+      <span>Code</span>Forge
+    </h1>
+    <p class="hero-subtitle" data-i18n="hero_sub"></p>
+    <p class="hero-slogan"><strong data-i18n="hero_slogan"></strong></p>
+    <div class="hero-btns">
+      <a href="#services" class="btn-primary" data-i18n="hero_btn1"></a>
+      <a href="#contact" class="btn-secondary" data-i18n="hero_btn2"></a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">50+</div><div class="stat-label" data-i18n="stat1"></div></div>
+      <div class="stat"><div class="stat-num">30+</div><div class="stat-label" data-i18n="stat2"></div></div>
+      <div class="stat"><div class="stat-num">5+</div><div class="stat-label" data-i18n="stat3"></div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-i18n="stat4"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text fade-in">
+        <div class="section-tag" data-i18n="about_tag"></div>
+        <h2 class="section-title" data-i18n="about_title"></h2>
+        <p class="lead" data-i18n="about_lead"></p>
+        <p data-i18n="about_p"></p>
+        <div class="about-values">
+          <div class="value-item">
+            <div class="value-icon">🎯</div>
+            <div class="value-text"><h4 data-i18n="val1_h"></h4><p data-i18n="val1_p"></p></div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">⚡</div>
+            <div class="value-text"><h4 data-i18n="val2_h"></h4><p data-i18n="val2_p"></p></div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">🔒</div>
+            <div class="value-text"><h4 data-i18n="val3_h"></h4><p data-i18n="val3_p"></p></div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual fade-in">
+        <div class="code-window">
+          <div class="code-header">
+            <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+            <span class="code-filename">codeforge.ts</span>
+          </div>
+          <div class="code-body">
+<span class="cm">// CodeForge – Digital Solutions</span><br>
+<span class="ck">interface</span> <span class="cn">Solution</span> {<br>
+&nbsp;&nbsp;<span class="cs">innovation</span>: <span class="cp">boolean</span>;<br>
+&nbsp;&nbsp;<span class="cs">quality</span>: <span class="cp">"premium"</span>;<br>
+&nbsp;&nbsp;<span class="cs">delivery</span>: <span class="cp">"fast"</span>;<br>
+}<br><br>
+<span class="ck">class</span> <span class="cn">CodeForge</span> {<br>
+&nbsp;&nbsp;<span class="ck">private</span> <span class="cs">team</span> = <span class="cv">30</span>+ <span class="cp">"experts"</span>;<br><br>
+&nbsp;&nbsp;<span class="cs">build</span>(<span class="cv">idea</span>: <span class="cp">string</span>): <span class="cn">Solution</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="ck">return</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cs">innovation</span>: <span class="cn">true</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cs">quality</span>: <span class="cp">"premium"</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cs">delivery</span>: <span class="cp">"fast"</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;};<br>
+&nbsp;&nbsp;}<br>
+}<br><br>
+<span class="cm">// Your vision → our code 🚀</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-tag" data-i18n="srv_tag"></div>
+      <h2 class="section-title" data-i18n="srv_title"></h2>
+      <p class="section-desc" data-i18n="srv_desc"></p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-in">
+        <div class="service-icon service-icon-1">🌐</div>
+        <h3 data-i18n="s1_h"></h3>
+        <p data-i18n="s1_p"></p>
+        <span class="service-tag">React · Vue · Angular</span>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon service-icon-2">📱</div>
+        <h3 data-i18n="s2_h"></h3>
+        <p data-i18n="s2_p"></p>
+        <span class="service-tag">Flutter · React Native</span>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon service-icon-3">🎨</div>
+        <h3 data-i18n="s3_h"></h3>
+        <p data-i18n="s3_p"></p>
+        <span class="service-tag">Figma · Adobe XD</span>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon service-icon-4">💻</div>
+        <h3 data-i18n="s4_h"></h3>
+        <p data-i18n="s4_p"></p>
+        <span class="service-tag">Node · Python · Go</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-tag" data-i18n="port_tag"></div>
+      <h2 class="section-title" data-i18n="port_title"></h2>
+      <p class="section-desc" data-i18n="port_desc"></p>
+    </div>
+    <div class="portfolio-grid">
+      <div class="portfolio-card fade-in">
+        <div class="portfolio-img pi-1">🛒</div>
+        <div class="portfolio-info">
+          <h3 data-i18n="p1_h"></h3>
+          <p data-i18n="p1_p"></p>
+          <div class="portfolio-tech">
+            <span class="tech-tag">React</span>
+            <span class="tech-tag">Node.js</span>
+            <span class="tech-tag">MongoDB</span>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-card fade-in">
+        <div class="portfolio-img pi-2">🏥</div>
+        <div class="portfolio-info">
+          <h3 data-i18n="p2_h"></h3>
+          <p data-i18n="p2_p"></p>
+          <div class="portfolio-tech">
+            <span class="tech-tag">Flutter</span>
+            <span class="tech-tag">Firebase</span>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-card fade-in">
+        <div class="portfolio-img pi-3">📊</div>
+        <div class="portfolio-info">
+          <h3 data-i18n="p3_h"></h3>
+          <p data-i18n="p3_p"></p>
+          <div class="portfolio-tech">
+            <span class="tech-tag">Vue.js</span>
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">PostgreSQL</span>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-card fade-in">
+        <div class="portfolio-img pi-4">🍕</div>
+        <div class="portfolio-info">
+          <h3 data-i18n="p4_h"></h3>
+          <p data-i18n="p4_p"></p>
+          <div class="portfolio-tech">
+            <span class="tech-tag">React Native</span>
+            <span class="tech-tag">Stripe</span>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-card fade-in">
+        <div class="portfolio-img pi-5">🤖</div>
+        <div class="portfolio-info">
+          <h3 data-i18n="p5_h"></h3>
+          <p data-i18n="p5_p"></p>
+          <div class="portfolio-tech">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Claude AI</span>
+            <span class="tech-tag">FastAPI</span>
+          </div>
+        </div>
+      </div>
+      <div class="portfolio-card fade-in">
+        <div class="portfolio-img pi-6">🎓</div>
+        <div class="portfolio-info">
+          <h3 data-i18n="p6_h"></h3>
+          <p data-i18n="p6_p"></p>
+          <div class="portfolio-tech">
+            <span class="tech-tag">Next.js</span>
+            <span class="tech-tag">TypeScript</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-tag" data-i18n="why_tag"></div>
+      <h2 class="section-title" data-i18n="why_title"></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card fade-in"><span class="why-icon">🎨</span><h3 data-i18n="w1_h"></h3><p data-i18n="w1_p"></p></div>
+      <div class="why-card fade-in"><span class="why-icon">⚡</span><h3 data-i18n="w2_h"></h3><p data-i18n="w2_p"></p></div>
+      <div class="why-card fade-in"><span class="why-icon">📱</span><h3 data-i18n="w3_h"></h3><p data-i18n="w3_p"></p></div>
+      <div class="why-card fade-in"><span class="why-icon">🔒</span><h3 data-i18n="w4_h"></h3><p data-i18n="w4_p"></p></div>
+      <div class="why-card fade-in"><span class="why-icon">🏆</span><h3 data-i18n="w5_h"></h3><p data-i18n="w5_p"></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="section-tag" data-i18n="cont_tag"></div>
+      <h2 class="section-title" data-i18n="cont_title"></h2>
+      <p class="section-desc" data-i18n="cont_desc"></p>
+    </div>
+    <div class="contact-wrapper fade-in">
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="contact-item-icon">📞</div>
+          <div class="contact-item-text">
+            <label data-i18n="ci_phone_label"></label>
+            <span>+994 77 323 44 13</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📧</div>
+          <div class="contact-item-text">
+            <label data-i18n="ci_email_label"></label>
+            <span>info@codeforge.az</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">📍</div>
+          <div class="contact-item-text">
+            <label data-i18n="ci_loc_label"></label>
+            <span data-i18n="ci_loc_val"></span>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="cf_name"></label>
+            <input type="text" id="cf_name" data-i18n-placeholder="cf_name_ph"/>
+          </div>
+          <div class="form-group">
+            <label data-i18n="cf_email"></label>
+            <input type="email" id="cf_email" data-i18n-placeholder="cf_email_ph"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label data-i18n="cf_service"></label>
+          <select id="cf_service">
+            <option value="" data-i18n="cf_srv_default"></option>
+            <option value="web" data-i18n="s1_h"></option>
+            <option value="mobile" data-i18n="s2_h"></option>
+            <option value="ui" data-i18n="s3_h"></option>
+            <option value="software" data-i18n="s4_h"></option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-i18n="cf_msg"></label>
+          <textarea id="cf_msg" data-i18n-placeholder="cf_msg_ph"></textarea>
+        </div>
+        <button class="btn-primary" id="sendBtn" onclick="submitForm()">
+          <span id="sendBtnText" data-i18n="cf_send"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">
+        <div class="nav-logo-icon">CF</div>
+        <span class="footer-brand-name">CodeForge</span>
+      </div>
+      <div class="footer-slogan" data-i18n="hero_slogan"></div>
+    </div>
+    <div class="footer-links">
+      <a href="#about" data-i18n="nav_about"></a>
+      <a href="#services" data-i18n="nav_services"></a>
+      <a href="#portfolio" data-i18n="nav_portfolio"></a>
+      <a href="#contact" data-i18n="nav_contact"></a>
+    </div>
+  </div>
+  <div class="footer-copy">
+    © 2025 <span>CodeForge</span>. <span data-i18n="footer_rights"></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+<button id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ══════════════════════════════════════════
+//  ⚠️  EmailJS KREDENSİALLARI  ⚠️
+//  Aşağıdakı 3 dəyəri EmailJS hesabınızdan alın:
+//  https://dashboard.emailjs.com
+// ══════════════════════════════════════════
+const EMAILJS_PUBLIC_KEY  = "MTmfY6hZ8U_ffJ10S";   // Account > API Keys
+const EMAILJS_SERVICE_ID  = "service_iir79el";   // Email Services > Service ID
+const EMAILJS_TEMPLATE_ID = "template_inskhsn";  // Email Templates > Template ID
+// ══════════════════════════════════════════
+
+// EmailJS-i başlat
+(function(){
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+})();
+
+// ── i18n DATA ──
+const i18n = {
+az:{
+  nav_about:"Haqqımızda", nav_services:"Xidmətlər", nav_portfolio:"Portfolio",
+  nav_why:"Niyə Biz?", nav_contact:"Əlaqə",
+  hero_badge:"Azərbaycanın Lider Proqram Şirkəti",
+  hero_sub:"Rəqəmsal Gələcəyinizi Bizimlə İnşa Edin",
+  hero_slogan:"CodeForge – Fikirləri Rəqəmsal Həllərə Çeviririk.",
+  hero_btn1:"Xidmətlərimiz →", hero_btn2:"Əlaqə Saxlayın",
+  stat1:"Tamamlanmış Layihə", stat2:"Xoşbəxt Müştəri",
+  stat3:"İl Təcrübə", stat4:"Müştəri Məmnuniyyəti",
+  about_tag:"Haqqımızda", about_title:"Biz Kimik?",
+  about_lead:"CodeForge – innovativ texnologiyalar və kreativ həllərlə işinizi rəqəmsal dünyada irəliyə aparır.",
+  about_p:"Bakıda fəaliyyət göstərən CodeForge, mobil tətbiqlər, vebsaytlar, UI/UX dizayn və xüsusi proqram həlləri sahəsində peşəkar xidmət göstərən şirkətdir.",
+  val1_h:"Missiyamız", val1_p:"Hər bir müştəriyə fərdi, innovativ rəqəmsal həllər təqdim etmək.",
+  val2_h:"Sürət & Keyfiyyət", val2_p:"Vaxtında, yüksək keyfiyyətli nəticə — hər zaman.",
+  val3_h:"Etibarlılıq", val3_p:"Müştəri məlumatları tam gizlilik və təhlükəsizliklə qorunur.",
+  srv_tag:"Xidmətlər", srv_title:"Nə Edirik?",
+  srv_desc:"Biznesinizi böyütmək üçün gərəkli bütün rəqəmsal xidmətləri bir damın altında tapırsınız.",
+  s1_h:"Vebsayt Hazırlanması", s1_p:"Sürətli, müasir, tam responsive vebsaytlar. SEO optimallaşdırılmış, yüksək performanslı.",
+  s2_h:"Mobil Tətbiqlər", s2_p:"iOS və Android üçün native və cross-platform mobil tətbiqlər.",
+  s3_h:"UI/UX Dizayn", s3_p:"İstifadəçi dostu, estetik cəhətdən mükəmməl interfeyslər.",
+  s4_h:"Proqram Təminatı", s4_p:"Biznesinizə xas xüsusi backend, ERP, CRM sistemləri.",
+  port_tag:"Portfolio", port_title:"Görülmüş İşlər",
+  port_desc:"Müxtəlif sənaye sahələrindəki uğurlu layihələrimizin seçilmiş nümunələri.",
+  p1_h:"E-Ticarət Platformu", p1_p:"Tam funksional onlayn alış-veriş saytı. Çoxlu ödəniş üsulu, admin panel.",
+  p2_h:"Tibb Tətbiqi", p2_p:"Həkimlər üçün mobil tətbiq. Xəstə izlənməsi, randevu sistemi.",
+  p3_h:"Biznes Analitika", p3_p:"Real-time məlumat vizualizasiyası. Qərar qəbulunu sürətləndirir.",
+  p4_h:"Yemək Çatdırılması", p4_p:"Restoran ağı üçün çatdırılma tətbiqi. GPS izlənməsi, anlıq bildirişlər.",
+  p5_h:"AI Köməkçisi", p5_p:"Claude API inteqrasiyası olan ağıllı korporativ köməkçi sistemı.",
+  p6_h:"Təhsil Platforması", p6_p:"Onlayn kurs platforması. Video dərslər, testlər, sertifikat sistemi.",
+  why_tag:"Üstünlüklərimiz", why_title:"Niyə CodeForge?",
+  w1_h:"Müasir Dizayn", w1_p:"Hər layihə estetik cəhətdən mükəmməl, trend dizayn standartlarına uyğun.",
+  w2_h:"Sürətli İcra", w2_p:"Optimizasiya edilmiş iş prosesi ilə vaxtında, keyfiyyətli nəticə.",
+  w3_h:"Mobil Uyğunluq", w3_p:"Bütün cihaz ölçüləri üçün tam responsive dizayn.",
+  w4_h:"Yüksək Təhlükəsizlik", w4_p:"Ən müasir təhlükəsizlik standartlarına uyğun kod yazılışı.",
+  w5_h:"Keyfiyyətli Nəticə", w5_p:"Hər layihədə ən yüksək keyfiyyət standartlarına riayət.",
+  cont_tag:"Əlaqə", cont_title:"Bizimlə Əlaqə Saxlayın",
+  cont_desc:"Layihəniz haqqında danışmaq istəyirsiniz? Biz hazırıq!",
+  ci_phone_label:"TELEFON", ci_email_label:"E-POÇT", ci_loc_label:"ÜNVAN",
+  ci_loc_val:"Bakı, Azərbaycan",
+  cf_name:"Adınız", cf_name_ph:"Adınızı daxil edin",
+  cf_email:"E-poçt", cf_email_ph:"email@example.com",
+  cf_service:"Xidmət seçin", cf_srv_default:"— Xidmət seçin —",
+  cf_msg:"Mesaj", cf_msg_ph:"Layihəniz haqqında məlumat verin...",
+  cf_send:"Göndər →",
+  toast_ok:"Mesajınız göndərildi! Tezliklə sizinlə əlaqə saxlayacağıq. ✅",
+  toast_err:"Zəhmət olmasa bütün sahələri doldurun.",
+  toast_sending:"Göndərilir...",
+  toast_fail:"Göndərmə xətası. Yenidən cəhd edin.",
+  footer_rights:"Bütün hüquqlar qorunur."
+},
+tr:{
+  nav_about:"Hakkımızda", nav_services:"Hizmetler", nav_portfolio:"Portföy",
+  nav_why:"Neden Biz?", nav_contact:"İletişim",
+  hero_badge:"Azerbaycan'ın Lider Yazılım Şirketi",
+  hero_sub:"Dijital Geleceğinizi Bizimle İnşa Edin",
+  hero_slogan:"CodeForge – Fikirleri Dijital Çözümlere Dönüştürüyoruz.",
+  hero_btn1:"Hizmetlerimiz →", hero_btn2:"İletişime Geçin",
+  stat1:"Tamamlanan Proje", stat2:"Mutlu Müşteri",
+  stat3:"Yıl Deneyim", stat4:"Müşteri Memnuniyeti",
+  about_tag:"Hakkımızda", about_title:"Biz Kimiz?",
+  about_lead:"CodeForge – yenilikçi teknolojiler ve yaratıcı çözümlerle işinizi dijital dünyada ileriye taşır.",
+  about_p:"Bakü merkezli CodeForge, mobil uygulamalar, web siteleri, UI/UX tasarım ve özel yazılım çözümleri alanında profesyonel hizmet sunan bir şirkettir.",
+  val1_h:"Misyonumuz", val1_p:"Her müşteriye özel, yenilikçi dijital çözümler sunmak.",
+  val2_h:"Hız & Kalite", val2_p:"Zamanında, yüksek kaliteli sonuç — her zaman.",
+  val3_h:"Güvenilirlik", val3_p:"Müşteri verileri tam gizlilik ve güvenlikle korunur.",
+  srv_tag:"Hizmetler", srv_title:"Ne Yapıyoruz?",
+  srv_desc:"İşinizi büyütmek için gereken tüm dijital hizmetleri tek çatı altında bulun.",
+  s1_h:"Web Sitesi Geliştirme", s1_p:"Hızlı, modern, tam responsive web siteleri. SEO optimize, yüksek performanslı.",
+  s2_h:"Mobil Uygulamalar", s2_p:"iOS ve Android için native ve cross-platform mobil uygulamalar.",
+  s3_h:"UI/UX Tasarım", s3_p:"Kullanıcı dostu, estetik açıdan mükemmel arayüzler.",
+  s4_h:"Yazılım Geliştirme", s4_p:"İşletmenize özel backend, ERP, CRM sistemleri.",
+  port_tag:"Portföy", port_title:"Tamamlanan Projeler",
+  port_desc:"Farklı sektörlerdeki başarılı projelerimizden seçilmiş örnekler.",
+  p1_h:"E-Ticaret Platformu", p1_p:"Tam işlevsel online alışveriş sitesi. Çoklu ödeme yöntemi, admin panel.",
+  p2_h:"Tıp Uygulaması", p2_p:"Doktorlar için mobil uygulama. Hasta takibi, randevu sistemi.",
+  p3_h:"İş Analitiği", p3_p:"Gerçek zamanlı veri görselleştirmesi. Karar almayı hızlandırır.",
+  p4_h:"Yemek Teslimatı", p4_p:"Restoran ağı için teslimat uygulaması. GPS takibi, anlık bildirimler.",
+  p5_h:"AI Asistanı", p5_p:"Claude API entegrasyonlu akıllı kurumsal asistan sistemi.",
+  p6_h:"Eğitim Platformu", p6_p:"Online kurs platforması. Video dersler, testler, sertifika sistemi.",
+  why_tag:"Avantajlarımız", why_title:"Neden CodeForge?",
+  w1_h:"Modern Tasarım", w1_p:"Her proje estetik açıdan mükemmel, trend tasarım standartlarına uygun.",
+  w2_h:"Hızlı Teslimat", w2_p:"Optimize süreçlerle zamanında, kaliteli sonuç.",
+  w3_h:"Mobil Uyumluluk", w3_p:"Tüm cihaz boyutları için tam responsive tasarım.",
+  w4_h:"Yüksek Güvenlik", w4_p:"En modern güvenlik standartlarına uygun kod yazımı.",
+  w5_h:"Kaliteli Sonuç", w5_p:"Her projede en yüksek kalite standartlarına bağlılık.",
+  cont_tag:"İletişim", cont_title:"Bizimle İletişime Geçin",
+  cont_desc:"Projeniz hakkında konuşmak ister misiniz? Hazırız!",
+  ci_phone_label:"TELEFON", ci_email_label:"E-POSTA", ci_loc_label:"ADRES",
+  ci_loc_val:"Bakü, Azerbaycan",
+  cf_name:"Adınız", cf_name_ph:"Adınızı girin",
+  cf_email:"E-posta", cf_email_ph:"email@example.com",
+  cf_service:"Hizmet seçin", cf_srv_default:"— Hizmet seçin —",
+  cf_msg:"Mesaj", cf_msg_ph:"Projeniz hakkında bilgi verin...",
+  cf_send:"Gönder →",
+  toast_ok:"Mesajınız gönderildi! En kısa sürede sizinle iletişime geçeceğiz. ✅",
+  toast_err:"Lütfen tüm alanları doldurun.",
+  toast_sending:"Gönderiliyor...",
+  toast_fail:"Gönderme hatası. Tekrar deneyin.",
+  footer_rights:"Tüm hakları saklıdır."
+},
+ru:{
+  nav_about:"О нас", nav_services:"Услуги", nav_portfolio:"Портфолио",
+  nav_why:"Почему мы?", nav_contact:"Контакты",
+  hero_badge:"Ведущая IT-компания Азербайджана",
+  hero_sub:"Создайте своё цифровое будущее вместе с нами",
+  hero_slogan:"CodeForge – превращаем идеи в цифровые решения.",
+  hero_btn1:"Наши услуги →", hero_btn2:"Связаться",
+  stat1:"Завершённых проектов", stat2:"Довольных клиентов",
+  stat3:"Лет опыта", stat4:"Удовлетворённость клиентов",
+  about_tag:"О компании", about_title:"Кто мы?",
+  about_lead:"CodeForge – продвигает ваш бизнес в цифровом мире с помощью инновационных технологий и творческих решений.",
+  about_p:"CodeForge, базирующаяся в Баку, предоставляет профессиональные услуги в области мобильных приложений, веб-сайтов, UI/UX дизайна и специальных программных решений.",
+  val1_h:"Наша миссия", val1_p:"Предоставлять каждому клиенту индивидуальные, инновационные цифровые решения.",
+  val2_h:"Скорость и качество", val2_p:"Своевременный результат высокого качества — всегда.",
+  val3_h:"Надёжность", val3_p:"Данные клиентов защищены полной конфиденциальностью и безопасностью.",
+  srv_tag:"Услуги", srv_title:"Что мы делаем?",
+  srv_desc:"Все цифровые услуги для развития вашего бизнеса под одной крышей.",
+  s1_h:"Разработка сайтов", s1_p:"Быстрые, современные, полностью адаптивные сайты. SEO-оптимизация, высокая производительность.",
+  s2_h:"Мобильные приложения", s2_p:"Нативные и кроссплатформенные мобильные приложения для iOS и Android.",
+  s3_h:"UI/UX дизайн", s3_p:"Удобные для пользователя, эстетически совершенные интерфейсы.",
+  s4_h:"Разработка ПО", s4_p:"Backend, ERP, CRM системы, разработанные специально для вашего бизнеса.",
+  port_tag:"Портфолио", port_title:"Выполненные проекты",
+  port_desc:"Избранные примеры наших успешных проектов в различных отраслях.",
+  p1_h:"Платформа e-commerce", p1_p:"Полнофункциональный интернет-магазин. Несколько способов оплаты, панель администратора.",
+  p2_h:"Медицинское приложение", p2_p:"Мобильное приложение для врачей. Отслеживание пациентов, система записи.",
+  p3_h:"Бизнес-аналитика", p3_p:"Визуализация данных в реальном времени. Ускоряет принятие решений.",
+  p4_h:"Доставка еды", p4_p:"Приложение доставки для сети ресторанов. GPS-отслеживание, мгновенные уведомления.",
+  p5_h:"AI-ассистент", p5_p:"Умная корпоративная система с интеграцией Claude API.",
+  p6_h:"Образовательная платформа", p6_p:"Платформа онлайн-курсов. Видеоуроки, тесты, сертификаты.",
+  why_tag:"Наши преимущества", why_title:"Почему CodeForge?",
+  w1_h:"Современный дизайн", w1_p:"Каждый проект эстетически безупречен, соответствует актуальным стандартам дизайна.",
+  w2_h:"Быстрое выполнение", w2_p:"Оптимизированный рабочий процесс — качественный результат в срок.",
+  w3_h:"Адаптивность", w3_p:"Полностью адаптивный дизайн для всех размеров экранов.",
+  w4_h:"Высокая безопасность", w4_p:"Код, написанный в соответствии с новейшими стандартами безопасности.",
+  w5_h:"Качественный результат", w5_p:"Соблюдение высочайших стандартов качества в каждом проекте.",
+  cont_tag:"Контакты", cont_title:"Свяжитесь с нами",
+  cont_desc:"Хотите обсудить ваш проект? Мы готовы!",
+  ci_phone_label:"ТЕЛЕФОН", ci_email_label:"E-MAIL", ci_loc_label:"АДРЕС",
+  ci_loc_val:"Баку, Азербайджан",
+  cf_name:"Ваше имя", cf_name_ph:"Введите ваше имя",
+  cf_email:"E-mail", cf_email_ph:"email@example.com",
+  cf_service:"Выберите услугу", cf_srv_default:"— Выберите услугу —",
+  cf_msg:"Сообщение", cf_msg_ph:"Расскажите о вашем проекте...",
+  cf_send:"Отправить →",
+  toast_ok:"Ваше сообщение отправлено! Мы свяжемся с вами в ближайшее время. ✅",
+  toast_err:"Пожалуйста, заполните все поля.",
+  toast_sending:"Отправляется...",
+  toast_fail:"Ошибка отправки. Попробуйте снова.",
+  footer_rights:"Все права защищены."
+},
+en:{
+  nav_about:"About", nav_services:"Services", nav_portfolio:"Portfolio",
+  nav_why:"Why Us?", nav_contact:"Contact",
+  hero_badge:"Azerbaijan's Leading Software Company",
+  hero_sub:"Build Your Digital Future With Us",
+  hero_slogan:"CodeForge – Turning Ideas Into Digital Solutions.",
+  hero_btn1:"Our Services →", hero_btn2:"Get In Touch",
+  stat1:"Projects Completed", stat2:"Happy Clients",
+  stat3:"Years Experience", stat4:"Client Satisfaction",
+  about_tag:"About Us", about_title:"Who We Are",
+  about_lead:"CodeForge drives your business forward in the digital world with innovative technology and creative solutions.",
+  about_p:"Based in Baku, CodeForge is a professional software company specializing in mobile apps, websites, UI/UX design, and custom software development.",
+  val1_h:"Our Mission", val1_p:"Deliver personalized, innovative digital solutions to every client.",
+  val2_h:"Speed & Quality", val2_p:"On-time, high-quality delivery — every single time.",
+  val3_h:"Reliability", val3_p:"Client data protected with full confidentiality and security.",
+  srv_tag:"Services", srv_title:"What We Do",
+  srv_desc:"All the digital services you need to grow your business, under one roof.",
+  s1_h:"Web Development", s1_p:"Fast, modern, fully responsive websites. SEO-optimized and high-performance.",
+  s2_h:"Mobile Apps", s2_p:"Native and cross-platform mobile apps for iOS and Android.",
+  s3_h:"UI/UX Design", s3_p:"User-friendly, aesthetically perfect interfaces that delight users.",
+  s4_h:"Software Development", s4_p:"Custom backend, ERP, and CRM systems tailored to your business.",
+  port_tag:"Portfolio", port_title:"Our Work",
+  port_desc:"Selected examples of our successful projects across various industries.",
+  p1_h:"E-Commerce Platform", p1_p:"Fully featured online store with multiple payment methods and admin panel.",
+  p2_h:"Medical App", p2_p:"Mobile app for doctors with patient tracking and appointment system.",
+  p3_h:"Business Analytics", p3_p:"Real-time data visualization that accelerates decision-making.",
+  p4_h:"Food Delivery", p4_p:"Delivery app for restaurant chain with GPS tracking and push notifications.",
+  p5_h:"AI Assistant", p5_p:"Smart corporate assistant system powered by Claude API integration.",
+  p6_h:"Education Platform", p6_p:"Online course platform with video lessons, quizzes, and certificates.",
+  why_tag:"Our Advantages", why_title:"Why Choose CodeForge?",
+  w1_h:"Modern Design", w1_p:"Every project is aesthetically perfect, meeting the latest design trends.",
+  w2_h:"Fast Delivery", w2_p:"Optimized workflows for on-time, quality results.",
+  w3_h:"Mobile-First", w3_p:"Fully responsive design for all screen sizes and devices.",
+  w4_h:"High Security", w4_p:"Code written to the highest modern security standards.",
+  w5_h:"Quality Results", w5_p:"Commitment to the highest quality standards in every project.",
+  cont_tag:"Contact", cont_title:"Get In Touch",
+  cont_desc:"Want to discuss your project? We're ready to help!",
+  ci_phone_label:"PHONE", ci_email_label:"EMAIL", ci_loc_label:"ADDRESS",
+  ci_loc_val:"Baku, Azerbaijan",
+  cf_name:"Your Name", cf_name_ph:"Enter your name",
+  cf_email:"Email", cf_email_ph:"email@example.com",
+  cf_service:"Select Service", cf_srv_default:"— Select a Service —",
+  cf_msg:"Message", cf_msg_ph:"Tell us about your project...",
+  cf_send:"Send Message →",
+  toast_ok:"Message sent! We'll get back to you shortly. ✅",
+  toast_err:"Please fill in all fields.",
+  toast_sending:"Sending...",
+  toast_fail:"Send error. Please try again.",
+  footer_rights:"All rights reserved."
+}
+};
+
+let currentLang = 'az';
+let isDark = true;
+
+function setLang(lang){
+  currentLang = lang;
+  document.documentElement.setAttribute('data-lang', lang);
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.toLowerCase() === lang);
+  });
+  const t = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if(t[k] !== undefined) el.textContent = t[k];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const k = el.getAttribute('data-i18n-placeholder');
+    if(t[k] !== undefined) el.placeholder = t[k];
+  });
+}
+
+function toggleTheme(){
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark?'dark':'light');
+  document.getElementById('themeIcon').textContent = isDark?'🌙':'🌞';
+}
+function toggleMobile(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+function closeMobile(){
+  document.getElementById('mobileMenu').classList.remove('open');
+}
+
+function showToast(msg, type='info'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast toast-' + type;
+  // force reflow
+  void t.offsetWidth;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3800);
+}
+
+async function submitForm(){
+  const t = i18n[currentLang];
+  const nameVal    = document.getElementById('cf_name').value.trim();
+  const emailVal   = document.getElementById('cf_email').value.trim();
+  const msgVal     = document.getElementById('cf_msg').value.trim();
+  const serviceEl  = document.getElementById('cf_service');
+  const serviceVal = serviceEl.options[serviceEl.selectedIndex].text;
+
+  // Validation
+  if(!nameVal || !emailVal || !msgVal){
+    showToast(t.toast_err, 'error');
+    return;
+  }
+
+  // E-mail format yoxlama
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRegex.test(emailVal)){
+    showToast(t.toast_err, 'error');
+    return;
+  }
+
+  // Button loading state
+  const btn = document.getElementById('sendBtn');
+  const btnText = document.getElementById('sendBtnText');
+  btn.disabled = true;
+  btnText.innerHTML = '<span class="spinner"></span>' + t.toast_sending;
+
+  // EmailJS şablon parametrləri
+  // EmailJS Dashboard-da template dəyişənlərini belə təyin edin:
+  // {{from_name}}, {{from_email}}, {{service}}, {{message}}, {{reply_to}}
+  const templateParams = {
+    from_name  : nameVal,
+    from_email : emailVal,
+    reply_to   : emailVal,
+    service    : serviceVal,
+    message    : msgVal
+  };
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+    showToast(t.toast_ok, 'success');
+    // Formu təmizlə
+    document.getElementById('cf_name').value  = '';
+    document.getElementById('cf_email').value = '';
+    document.getElementById('cf_msg').value   = '';
+    document.getElementById('cf_service').selectedIndex = 0;
+  } catch(err) {
+    console.error('EmailJS error:', err);
+    showToast(t.toast_fail, 'error');
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = t.cf_send;
+  }
+}
+
+// Scroll animations
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+// Back to top
+window.addEventListener('scroll',()=>{
+  document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+});
+
+// Nav scroll effect
+window.addEventListener('scroll',()=>{
+  const nav = document.querySelector('nav');
+  nav.style.boxShadow = window.scrollY > 50 ? '0 4px 30px rgba(0,0,0,0.3)' : 'none';
+});
+
+// Init
+setLang('az');
+</script>
+</body>
+</html>
